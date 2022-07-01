@@ -1,6 +1,6 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
-const OrdersTable = ({ orders }) => {
+const OrdersTable = ({ orders, setLastElement }) => {
 	console.log(orders)
 
 	return (
@@ -14,15 +14,27 @@ const OrdersTable = ({ orders }) => {
 				</TableHead>
 				<TableBody>
 					{orders.map((row, index) => (
-						<TableRow
-							key={row.id}
-							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-						>
-							<TableCell component='th' scope='row'>
-								{index + 1}
-							</TableCell>
-							<TableCell>{row.title}</TableCell>
-						</TableRow>
+						index === orders.length - 1 ?
+							<TableRow
+								key={row.id}
+								sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+								ref={setLastElement}
+							>
+								<TableCell component='th' scope='row'>
+									{index + 1}
+								</TableCell>
+								<TableCell>{row.title}</TableCell>
+							</TableRow>
+							:
+							<TableRow
+								key={row.id}
+								sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+							>
+								<TableCell component='th' scope='row'>
+									{index + 1}
+								</TableCell>
+								<TableCell>{row.title}</TableCell>
+							</TableRow>
 					))}
 				</TableBody>
 			</Table>

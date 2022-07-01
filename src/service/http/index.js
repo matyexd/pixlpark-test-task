@@ -7,7 +7,6 @@ const api = axios.create({
 	baseURL: API_URL
 })
 
-
 api.interceptors.request.use(async config => {
 	return config
 })

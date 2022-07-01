@@ -2,7 +2,7 @@ import { AppBar, Button, CircularProgress, Container, Toolbar, Typography } from
 import OrdersTable from './OrdersTable'
 
 
-const Home = ({ handleLogout, orders, isLoadingOrders, errorOrders }) => {
+const Home = ({ handleLogout, orders, isLoadingOrders, errorOrders, setLastElement }) => {
 
 
 	return (
@@ -17,7 +17,7 @@ const Home = ({ handleLogout, orders, isLoadingOrders, errorOrders }) => {
 
 			</AppBar>
 			<Container>
-				<OrdersTable orders={orders} />
+				<OrdersTable orders={orders} setLastElement={setLastElement} />
 				{isLoadingOrders && <CircularProgress />}
 				{errorOrders !== '' && <div>Ошибка</div>}
 			</Container>

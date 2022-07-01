@@ -1,20 +1,45 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { authUnauthorizedAction } from '../store/actions/authUserAction'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Home from '../components/Home'
 import { getOrdersAction } from '../store/actions/ordersAction'
 
-const COUNT_ORDERS = 20
+const COUNT_ORDERS = 50
 
 const HomePage = ({ Auth, unAuthUser, getOrders, Orders }) => {
+	console.log(Orders)
 	const { orders, isLoading, error } = Orders
 	const navigate = useNavigate()
 
 	const [filtredOrders, setFiltredOrders] = useState([])
 	const [currentPage, setCurrentPage] = useState(0)
-	const [scrollAction, setScrollAction] = useState(false)
+	const [lastElement, setLastElement] = useState(null)
 
+	const observer = useRef(
+		new IntersectionObserver(
+			(entries) => {
+				const first = entries[0]
+				if (first.isIntersecting) {
+					setCurrentPage((no) => no + 1)
+				}
+			})
+	)
+
+	useEffect(() => {
+		const currentElement = lastElement
+		const currentObserver = observer.current
+
+		if (currentElement) {
+			currentObserver.observe(currentElement)
+		}
+
+		return () => {
+			if (currentElement) {
+				currentObserver.unobserve(currentElement)
+			}
+		}
+	}, [lastElement])
 
 	const handleOrdersData = () => {
 		let ordersArray = []
@@ -30,47 +55,17 @@ const HomePage = ({ Auth, unAuthUser, getOrders, Orders }) => {
 		setFiltredOrders([...filtredOrders, ...ordersArray])
 	}
 
-
-	useEffect(() => {
-		document.addEventListener('scroll', scrollHandler)
-
-		return function() {
-			document.removeEventListener('scroll', scrollHandler)
-		}
-	}, [])
-
 	useEffect(() => {
 		if (orders && error === '' && !isLoading) {
-			console.log('хуй')
 			handleOrdersData()
-			setScrollAction(false)
-			setCurrentPage(currentPage + 1)
 		}
 	}, [Orders])
 
 	useEffect(() => {
-		if (Auth.isAuth) {
+		if (Auth.isAuth && error === '') {
 			getOrders(COUNT_ORDERS, COUNT_ORDERS * currentPage)
 		}
-	}, [])
-
-	useEffect(() => {
-		console.log(scrollAction)
-		if (scrollAction) {
-			getOrders(COUNT_ORDERS, COUNT_ORDERS * currentPage)
-		}
-	}, [scrollAction])
-
-
-	const scrollHandler = (e) => {
-		if (
-			e.target.documentElement.scrollHeight -
-			(e.target.documentElement.scrollTop + window.innerHeight) < 100
-		) {
-			console.log(12)
-			setScrollAction(true)
-		}
-	}
+	}, [currentPage])
 
 	const handleLogout = () => {
 		unAuthUser()
@@ -83,6 +78,7 @@ const HomePage = ({ Auth, unAuthUser, getOrders, Orders }) => {
 		orders={filtredOrders}
 		isLoadingOrders={isLoading}
 		errorOrders={error}
+		setLastElement={setLastElement}
 	/>
 }
 const mapStateToProps = state => ({
