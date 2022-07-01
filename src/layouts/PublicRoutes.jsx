@@ -1,7 +1,24 @@
-import LoginPage from '../pages/LoginPage'
+import { connect } from 'react-redux'
+import { Navigate } from 'react-router-dom'
+import { checkAuthAction } from '../store/actions/authUserAction'
 
-const PublicRoutes = () => {
-	return <LoginPage />
+const PublicRoutes = ({ children }) => {
+
+
+	if (localStorage.getItem('accessToken')) {
+		return <Navigate to={'/dashboard'} />
+	}
+
+	return children
 }
 
-export default PublicRoutes
+const mapStateToProps = state => ({
+	authState: state.Auth
+})
+
+const mapDispatchToProps = dispatch => ({
+	checkAuth: () => dispatch(checkAuthAction())
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(PublicRoutes)

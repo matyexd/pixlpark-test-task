@@ -1,42 +1,40 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import api from '../service/http'
+import api_auth from '../service/http'
+import { getAccessTokenAction } from '../store/actions/authUserAction'
+import sha1 from '../utils/encryptData'
+import LoginForm from '../components/LoginForm'
 
 
-const LoginPage = () => {
+const LoginPage = ({ loginUser }) => {
+
+	const [publicKey, setPublicKey] = useState('')
+	const [privateKey, setPrivateKey] = useState('')
 
 	const getRequestToken = async () => {
 		try {
-			const result = await api.get('/oauth/requesttoken')
-			const data = JSON.parse(result.data.contents)
-			console.log(data)
-
-			// await fetch('http://api.pixlpark.com/oauth/requesttoken', {
-			// 	headers: {
-			// 		'Content-Type': 'application/json'
-			// 	},
-			// 	method: 'get'
-			// }).then((responce) => console.log(responce))
-
+			const result = await api_auth.get('/oauth/requesttoken')
+			const data = result.data
+			await localStorage.setItem('requestToken', data.RequestToken)
 		} catch (e) {
 			console.log(e)
 		}
 	}
 
 	useEffect(() => {
-		if (!localStorage.getItem('requestToken')) {
-			getRequestToken()
-		}
+		getRequestToken()
 	}, [])
 
-	return <div>
-		<h1>Авторизация</h1>
-		<div>
-			<input type='text' />
-			<input type='password' />
-			<button>Отправить</button>
-		</div>
-	</div>
+	const handleLogin = () => {
+		let password = sha1(localStorage.getItem('requestToken') + privateKey)
+		loginUser(localStorage.getItem('requestToken'), publicKey, password)
+	}
+
+	return <LoginForm
+		setPublicKey={setPublicKey}
+		setPrivateKey={setPrivateKey}
+		handleLogin={handleLogin}
+	/>
 }
 
 const mapStateToProps = state => (
@@ -45,9 +43,13 @@ const mapStateToProps = state => (
 	}
 )
 
-const mapDispatchToProps = dispatch => (
-	{}
-)
+const mapDispatchToProps = dispatch => ({
+	loginUser: (requestToken, username, password) => dispatch(getAccessTokenAction(
+		requestToken,
+		username,
+		password
+	))
+})
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage)
