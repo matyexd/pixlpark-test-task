@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import api_auth from '../service/http'
+import api from '../service/http'
 import { getAccessTokenAction } from '../store/actions/authUserAction'
 import sha1 from '../utils/encryptData'
 import LoginForm from '../components/LoginForm'
@@ -13,7 +13,7 @@ const LoginPage = ({ loginUser }) => {
 
 	const getRequestToken = async () => {
 		try {
-			const result = await api_auth.get('/oauth/requesttoken')
+			const result = await api.get('/oauth/requesttoken')
 			const data = result.data
 			await localStorage.setItem('requestToken', data.RequestToken)
 		} catch (e) {

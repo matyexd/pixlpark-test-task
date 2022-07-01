@@ -1,7 +1,7 @@
-import api_auth from '../http'
+import api from '../http'
 
 export const authService = async ({ requestToken, username, password }) => {
-	return await api_auth.get(
+	return await api.get(
 		'/oauth/accesstoken',
 		{
 			params: {
@@ -15,7 +15,7 @@ export const authService = async ({ requestToken, username, password }) => {
 
 export const checkAuthService = async () => {
 	let refreshToken = localStorage.getItem('refreshToken')
-	return await api_auth.get(
+	return await api.get(
 		'/oauth/refreshtoken',
 		{
 			params: {
@@ -26,7 +26,7 @@ export const checkAuthService = async () => {
 
 export const unauthorizedService = async () => {
 	let accessToken = localStorage.getItem('accessToken')
-	return await api_auth.get(
+	return await api.get(
 		'/oauth/unauthorize',
 		{
 			params: { oauth_token: accessToken }
