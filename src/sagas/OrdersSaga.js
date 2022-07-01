@@ -6,15 +6,15 @@ import { getOrdersFailAction, getOrdersSuccessAction } from '../store/actions/or
 export function* getOrdersWorker({ payload }) {
 	try {
 		const data = yield call(getOrdersService, payload)
-		console.log(data.data)
+
 		if (data.data.ResponseCode === 200) {
 			yield put(getOrdersSuccessAction(data.data.Result))
 		} else {
-			console.log('Какая то ошибка')
+
 			yield put(getOrdersFailAction('Какая то ошибка'))
 		}
 	} catch (e) {
-		console.log(e)
+
 		yield put(getOrdersFailAction('Какая то ошибка'))
 	}
 }

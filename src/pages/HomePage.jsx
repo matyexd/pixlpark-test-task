@@ -8,13 +8,22 @@ import { getOrdersAction } from '../store/actions/ordersAction'
 const COUNT_ORDERS = 50
 
 const HomePage = ({ Auth, unAuthUser, getOrders, Orders }) => {
-	console.log(Orders)
+
 	const { orders, isLoading, error } = Orders
 	const navigate = useNavigate()
 
 	const [filtredOrders, setFiltredOrders] = useState([])
 	const [currentPage, setCurrentPage] = useState(0)
 	const [lastElement, setLastElement] = useState(null)
+	const [handleWork, setHandleWork] = useState(false)
+	const [status, setStatus] = useState('')
+
+	const handleChange = (event) => {
+		setStatus(event.target.value)
+		setLastElement(null)
+		setCurrentPage(0)
+		setFiltredOrders([])
+	}
 
 	const observer = useRef(
 		new IntersectionObserver(
@@ -46,7 +55,9 @@ const HomePage = ({ Auth, unAuthUser, getOrders, Orders }) => {
 		orders.forEach(element => {
 			const order = {
 				id: element.Id,
-				title: element.Title
+				title: element.Title,
+				price: element.Price,
+				status: element.Status
 			}
 
 			ordersArray.push(order)
@@ -56,22 +67,23 @@ const HomePage = ({ Auth, unAuthUser, getOrders, Orders }) => {
 	}
 
 	useEffect(() => {
-		if (orders && error === '' && !isLoading) {
+		if (handleWork && orders && error === '' && !isLoading && !Auth.isLoading && Auth.error === '') {
 			handleOrdersData()
+			setHandleWork(false)
 		}
 	}, [Orders])
 
 	useEffect(() => {
-		if (Auth.isAuth && error === '') {
-			getOrders(COUNT_ORDERS, COUNT_ORDERS * currentPage)
+		if (Auth.isAuth && error === '' && !Auth.isLoading && Auth.error === '') {
+			getOrders(COUNT_ORDERS, COUNT_ORDERS * currentPage, status)
+			setHandleWork(true)
 		}
-	}, [currentPage])
+	}, [currentPage, status])
 
 	const handleLogout = () => {
 		unAuthUser()
 		return navigate('/')
 	}
-
 
 	return <Home
 		handleLogout={handleLogout}
@@ -79,6 +91,8 @@ const HomePage = ({ Auth, unAuthUser, getOrders, Orders }) => {
 		isLoadingOrders={isLoading}
 		errorOrders={error}
 		setLastElement={setLastElement}
+		status={status}
+		handleChangeStatus={handleChange}
 	/>
 }
 const mapStateToProps = state => ({

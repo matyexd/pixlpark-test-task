@@ -20,7 +20,7 @@ export function* AuthGetAccessTokenWorker({ payload }) {
 			yield put(getAccessTokenFailAction('Неверные данные'))
 		}
 	} catch (e) {
-		console.log(e)
+
 		yield put(getAccessTokenFailAction('Непредвиденная ошибка'))
 	}
 }
@@ -32,10 +32,10 @@ export function* AuthUnauthorizedWorker(args) {
 			yield localStorage.removeItem('accessToken', data.data.AccessToken)
 			yield localStorage.removeItem('refreshToken', data.data.RefreshToken)
 		} else {
-			console.log('Невозможно')
+
 		}
 	} catch (e) {
-		console.log(e, 'Невозможно')
+
 	}
 }
 
@@ -52,7 +52,7 @@ export function* CheckAuthWorker() {
 			yield put(checkAuthFailAction())
 		}
 	} catch (e) {
-		console.log(e)
+
 		yield localStorage.removeItem('accessToken')
 		yield localStorage.removeItem('refreshToken')
 		yield put(checkAuthFailAction())

@@ -6,10 +6,11 @@ import sha1 from '../utils/encryptData'
 import LoginForm from '../components/LoginForm'
 
 
-const LoginPage = ({ loginUser }) => {
+const LoginPage = ({ loginUser, authState }) => {
 
 	const [publicKey, setPublicKey] = useState('')
 	const [privateKey, setPrivateKey] = useState('')
+	const [error, setError] = useState('')
 
 	const getRequestToken = async () => {
 		try {
@@ -17,9 +18,15 @@ const LoginPage = ({ loginUser }) => {
 			const data = result.data
 			await localStorage.setItem('requestToken', data.RequestToken)
 		} catch (e) {
-			console.log(e)
+
 		}
 	}
+
+	useEffect(() => {
+		if (authState.error) {
+			setError('Неверные данные')
+		}
+	}, [authState])
 
 	useEffect(() => {
 		getRequestToken()
@@ -31,6 +38,8 @@ const LoginPage = ({ loginUser }) => {
 	}
 
 	return <LoginForm
+		setError={setError}
+		error={error}
 		setPublicKey={setPublicKey}
 		setPrivateKey={setPrivateKey}
 		handleLogin={handleLogin}

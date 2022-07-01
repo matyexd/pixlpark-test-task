@@ -1,8 +1,9 @@
 import { AppBar, Button, CircularProgress, Container, Toolbar, Typography } from '@mui/material'
 import OrdersTable from './OrdersTable'
+import FormControlOrder from './FormControlOrder'
 
 
-const Home = ({ handleLogout, orders, isLoadingOrders, errorOrders, setLastElement }) => {
+const Home = ({ handleLogout, orders, isLoadingOrders, handleChangeStatus, status, errorOrders, setLastElement }) => {
 
 
 	return (
@@ -16,7 +17,11 @@ const Home = ({ handleLogout, orders, isLoadingOrders, errorOrders, setLastEleme
 				</Toolbar>
 
 			</AppBar>
+
 			<Container>
+
+				<FormControlOrder handleChangeStatus={handleChangeStatus} status={status} />
+
 				<OrdersTable orders={orders} setLastElement={setLastElement} />
 				{isLoadingOrders && <CircularProgress />}
 				{errorOrders !== '' && <div>Ошибка</div>}

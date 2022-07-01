@@ -1,8 +1,6 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
 const OrdersTable = ({ orders, setLastElement }) => {
-	console.log(orders)
-
 	return (
 		<TableContainer component={Paper} sx={{ mt: 3 }}>
 			<Table sx={{ minWidth: 650 }} aria-label='simple table'>
@@ -10,6 +8,8 @@ const OrdersTable = ({ orders, setLastElement }) => {
 					<TableRow>
 						<TableCell>№</TableCell>
 						<TableCell>Название заказа</TableCell>
+						<TableCell>Стоимость заказа</TableCell>
+						<TableCell>Статус заказа</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -24,6 +24,8 @@ const OrdersTable = ({ orders, setLastElement }) => {
 									{index + 1}
 								</TableCell>
 								<TableCell>{row.title}</TableCell>
+								<TableCell>{row.price}</TableCell>
+								<TableCell>{row.status}</TableCell>
 							</TableRow>
 							:
 							<TableRow
@@ -34,6 +36,8 @@ const OrdersTable = ({ orders, setLastElement }) => {
 									{index + 1}
 								</TableCell>
 								<TableCell>{row.title}</TableCell>
+								<TableCell>{row.price}</TableCell>
+								<TableCell>{row.status}</TableCell>
 							</TableRow>
 					))}
 				</TableBody>
