@@ -3,11 +3,11 @@ import { authUnauthorizedAction } from '../store/actions/authUserAction'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Home from '../components/Home'
-import { getOrdersAction } from '../store/actions/ordersAction'
+import { clearStoreOrdersAction, getOrdersAction } from '../store/actions/ordersAction'
 
 const COUNT_ORDERS = 50
 
-const HomePage = ({ Auth, unAuthUser, getOrders, Orders }) => {
+const HomePage = ({ Auth, unAuthUser, getOrders, Orders, clearStoreOrders }) => {
 
 	const { orders, isLoading, error } = Orders
 	const navigate = useNavigate()
@@ -85,6 +85,12 @@ const HomePage = ({ Auth, unAuthUser, getOrders, Orders }) => {
 		return navigate('/')
 	}
 
+	useEffect(() => {
+		return function() {
+			clearStoreOrders()
+		}
+	}, [])
+
 	return <Home
 		handleLogout={handleLogout}
 		orders={filtredOrders}
@@ -106,7 +112,8 @@ const mapDispatchToProps = dispatch => ({
 		take = 10,
 		skip = 0,
 		status = ''
-	) => dispatch(getOrdersAction(take, skip, status))
+	) => dispatch(getOrdersAction(take, skip, status)),
+	clearStoreOrders: () => dispatch(clearStoreOrdersAction())
 })
 
 

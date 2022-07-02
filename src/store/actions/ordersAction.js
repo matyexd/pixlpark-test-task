@@ -1,4 +1,4 @@
-import { GET_ORDERS, GET_ORDERS_FAIL, GET_ORDERS_SUCCESS } from '../types/OrdersTypes'
+import { CLEAR_STORE_ORDERS, GET_ORDERS, GET_ORDERS_FAIL, GET_ORDERS_SUCCESS } from '../types/OrdersTypes'
 
 export const getOrdersAction = (take, skip, status) => ({
 	type: GET_ORDERS,
@@ -13,4 +13,8 @@ export const getOrdersSuccessAction = (payload) => ({
 export const getOrdersFailAction = (payload) => ({
 	type: GET_ORDERS_FAIL,
 	payload: payload
+})
+
+export const clearStoreOrdersAction = (payload) => ({
+	type: CLEAR_STORE_ORDERS
 })

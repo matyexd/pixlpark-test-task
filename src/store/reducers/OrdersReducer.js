@@ -1,4 +1,4 @@
-import { GET_ORDERS, GET_ORDERS_FAIL, GET_ORDERS_SUCCESS } from '../types/OrdersTypes'
+import { CLEAR_STORE_ORDERS, GET_ORDERS, GET_ORDERS_FAIL, GET_ORDERS_SUCCESS } from '../types/OrdersTypes'
 
 const initialState = {
 	orders: [],
@@ -26,6 +26,13 @@ export const OrdersReducer = (state = initialState, action) => {
 				...state,
 				error: action.payload,
 				isLoading: false
+			}
+
+		case CLEAR_STORE_ORDERS:
+			return {
+				orders: [],
+				isLoading: true,
+				error: ''
 			}
 
 		default:

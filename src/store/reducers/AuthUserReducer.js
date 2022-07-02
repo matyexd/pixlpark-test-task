@@ -73,6 +73,7 @@ export const AuthUserReducer = (state = initialState, action) => {
 				error: ''
 			}
 
+
 		default:
 			return state
 	}
